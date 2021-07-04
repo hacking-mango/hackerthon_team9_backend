@@ -22,3 +22,9 @@ eval "$(direnv hook zsh)"
 direnv allow
 
 make run - <장고 프로젝트 실행>
+
+### 2 - 1 git push 전
+
+명렴프롬포트, 터미널 : make lint
+
+문법 검사하고 규격에 맞게 수정진행
