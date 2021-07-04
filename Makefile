@@ -1,3 +1,8 @@
+lint:
+	isort .
+	black . --config myproject.toml
+	flake8
+
 install:
 	pip install -r requirements/dev.txt
 
