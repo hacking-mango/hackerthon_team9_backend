@@ -27,14 +27,9 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = [
-    "rest_framework",
-    "corsheaders"
-]
+THIRD_PARTY_APPS = ["rest_framework", "corsheaders"]
 
-LOCAL_APPS = [
-    "user"
-]
+LOCAL_APPS = ["user"]
 
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -86,9 +81,7 @@ DATABASES = {
     },
 }
 
-REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "base.common.exceptions.custom_exception_handler"
-}
+REST_FRAMEWORK = {"EXCEPTION_HANDLER": "base.common.exceptions.custom_exception_handler"}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
