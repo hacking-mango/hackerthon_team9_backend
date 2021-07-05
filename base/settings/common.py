@@ -27,9 +27,14 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["rest_framework", "corsheaders"]
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "corsheaders"
+]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "user"
+]
 
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -72,11 +77,18 @@ WSGI_APPLICATION = "base.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
+        "HOST": os.environ["DB_HOST"],  # 데이테베이스 주소(IP)
+        "USER": os.environ["DB_USER"],  # 데이터베이스 계정
+        "PASSWORD": os.environ["DB_PASSWORD"],  # 계정 비밀번호
+        "NAME": os.environ.get("DB_NAME", "postgres"),  # DB명
+        "PORT": os.environ.get("DB_PORT"),  # 데이터베이스 포트(보통은 3306)
+    },
 }
 
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "base.common.exceptions.custom_exception_handler"
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
