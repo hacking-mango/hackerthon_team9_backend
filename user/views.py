@@ -28,9 +28,5 @@ def user_view(request):
 
             return Response({"success": 1, "data": serializer.data}, status=status.HTTP_201_CREATED)
         else:
-            print(serializer.errors)
-
-        return Response(
-            {"success": 0, "error_code": "SIGN-UP-ERROR", "message": "회원가입을 하는 도중 오류가 발생했습니다."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+            print(serializer.errors.keys())
+            raise exc.ParseError(code="SIGN-UP-ERROR", detail="회원가입 오류 발생")
