@@ -73,3 +73,17 @@ class UserUpdateSerializer(serializers.Serializer):
     class Meta:
         model = models.User
         fields = ["email", "password", "age", "phone"]
+
+
+class PositionUpdateSerializer(serializers.ModelSerializer):
+    def update(self, validated_data):
+
+        user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+
+        user.position = validated_data["position"]
+        user.save()
+        return user
+
+    class Meta:
+        model = models.User
+        fields = ["position"]
