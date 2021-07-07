@@ -42,3 +42,16 @@ class FileSerializer(serializers.Serializer):
     # user.profile_image.save(user.nickname + extension_name, validated_data["file"])  # 입력받은 파일 저장
 
     # return user
+
+class PositionUpdateSerializer(serializers.ModelSerializer):
+    def update(self, validated_data):
+
+        user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+
+        user.position = validated_data["position"]
+        user.save()
+        return user
+
+    class Meta:
+        model = models.User
+        fields = ["position"]
