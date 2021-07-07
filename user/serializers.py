@@ -43,6 +43,7 @@ class FileSerializer(serializers.Serializer):
 
     # return user
 
+
 class UserInfoSerializer(serializers.Serializer):
     class Meta:
         model = models.User
