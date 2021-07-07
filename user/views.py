@@ -42,3 +42,17 @@ def user_info_view(request):
     serializer = serializers.UserInfoSerializer(user)
 
     return Response({"success": 1, "data": serializer.data}, status=status.HTTP_200_OK)
+
+
+@api_view(["PUT"])
+def user_update_view(request):
+    user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+
+    serializer = serializers.UserUpdateSerializer(instance=user, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"success": 1}, status=status.HTTP_200_OK)
+    else:
+        print(serializer.errors.keys())
+        raise exc.ParseError(code="USER-UPDATE-ERROR", detail="사용자 정보 수정 중 오류 발생")

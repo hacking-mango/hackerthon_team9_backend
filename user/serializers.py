@@ -52,3 +52,24 @@ class UserInfoSerializer(serializers.Serializer):
     class Meta:
         model = models.User
         fields = ["email", "age", "phone"]
+
+
+class UserUpdateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    age = serializers.IntegerField()
+    phone = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def update(self, user, validated_data):
+        user.email = validated_data["email"]
+        user.age = validated_data["age"]
+        user.phone = validated_data["phone"]
+
+        password = make_password(validated_data["password"])
+        user.password = password
+        user.save()
+        return user
+
+    class Meta:
+        model = models.User
+        fields = ["email", "password", "age", "phone"]
