@@ -12,8 +12,8 @@ AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazo
 # 'CacheControl': 'max-age=86400',
 # }
 
-AWS_S3_SECURE_URLS = False # https 사용 여부
-AWS_QUERYSTRING_AUTH = False # 인증 관련 쿼리 파라미터 허용 여부
+AWS_S3_SECURE_URLS = False  # https 사용 여부
+AWS_QUERYSTRING_AUTH = False  # 인증 관련 쿼리 파라미터 허용 여부
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
