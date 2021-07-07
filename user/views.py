@@ -34,7 +34,10 @@ def user_view(request):
 
 @api_view(["GET"])
 def user_info_view(request):
-    user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+    from . import models
+
+    # user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+    user = models.User.objects.get(pk=1)
 
     serializer = serializers.UserInfoSerializer(user)
 
