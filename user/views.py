@@ -56,3 +56,31 @@ def user_update_view(request):
     else:
         print(serializer.errors.keys())
         raise exc.ParseError(code="USER-UPDATE-ERROR", detail="사용자 정보 수정 중 오류 발생")
+
+
+@api_view(["PUT"])
+def profile_update_view(request):
+
+    data = request.data
+    position_only = not data.pop('flag')
+    user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+
+    def process(user, data, serializer, code, detail):
+
+        serializer = serializer(instance=user, data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response({"success": 1}, status=status.HTTP_200_OK)
+        else:
+            print(serializer.errors.keys())
+            raise exc.ParseError(code=code, detail=detail)
+
+    config = (
+        [serializers.PositionUpdateSerializer, "POSITION-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
+        if position_only
+        else [serializers.ProfileUpdateSerializer, "PROFILE-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
+    )
+
+    return process(user, data, *config)

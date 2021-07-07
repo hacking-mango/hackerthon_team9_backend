@@ -73,3 +73,35 @@ class UserUpdateSerializer(serializers.Serializer):
     class Meta:
         model = models.User
         fields = ["email", "password", "age", "phone"]
+
+
+class PositionUpdateSerializer(serializers.ModelSerializer):
+    position = serializers.CharField()
+
+    def update(self, user, validated_data):
+
+        user.position = validated_data["position"]
+        user.save()
+
+        return user
+
+    class Meta:
+        model = models.User
+        fields = ["position"]
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField(use_url=True)
+    nickname = serializers.CharField()
+    position = serializers.CharField()
+
+    def update(self, user, validated_data):
+
+        user.nickname = validated_data["nickname"]
+        user.position = validated_data["position"]
+        user.profile_image = validated_data["profile_image"]
+        user.save()
+        return user
+
+    class Meta:
+        model = models.User
+        fields = ["nickname", "position", "profile_image"]
