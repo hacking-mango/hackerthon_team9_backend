@@ -42,3 +42,8 @@ class FileSerializer(serializers.Serializer):
     # user.profile_image.save(user.nickname + extension_name, validated_data["file"])  # 입력받은 파일 저장
 
     # return user
+
+class UserInfoSerializer(serializers.Serializer):
+    class Meta:
+        model = models.User
+        fields = ["email", "age", "phone"]
