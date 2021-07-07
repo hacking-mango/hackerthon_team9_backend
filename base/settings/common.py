@@ -27,7 +27,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["rest_framework", "corsheaders"]
+THIRD_PARTY_APPS = ["rest_framework", "corsheaders", "storages"]
 
 LOCAL_APPS = ["user"]
 
