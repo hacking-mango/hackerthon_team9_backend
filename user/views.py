@@ -46,8 +46,9 @@ def user_info_view(request):
 
 @api_view(["PUT"])
 def user_update_view(request):
+    user = "user object"  # 토큰 기준으로 확인한 사용자 객체
 
-    serializer = serializers.UserUpdateSerializer(data=request.data)
+    serializer = serializers.UserUpdateSerializer(instance=user, data=request.data)
 
     if serializer.is_valid():
         serializer.save()
