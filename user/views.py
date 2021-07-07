@@ -37,27 +37,6 @@ def profile_update_view(request):
     data = request.data
     position_only = not data.pop('flag')
 
-    if position_only:
-        serializer = serializers.PositionUpdateSerializer(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response({"success": 1}, status=status.HTTP_200_OK)
-        else:
-            print(serializer.errors.keys())
-            raise exc.ParseError(code="POSITION-UPDATE-ERROR", detail="포지션 정보 수정 중 오류 발생")
-
-    serializer = serializers.ProfileUpdateSerializer(data=data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-        return Response({"success": 1}, status=status.HTTP_200_OK)
-    else:
-        print(serializer.errors.keys())
-        raise exc.ParseError(code="PROFILE-UPDATE-ERROR", detail="프로필 정보 수정 중 오류 발생")
-
     def process(data, serializer, code, detail):
 
         serializer = serializer(data=data)
@@ -69,3 +48,11 @@ def profile_update_view(request):
         else:
             print(serializer.errors.keys())
             raise exc.ParseError(code=code, detail=detail)
+
+    config = (
+        [serializers.PositionUpdateSerializer, "POSITION-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
+        if position_only
+        else [serializers.ProfileUpdateSerializer, "PROFILE-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
+    )
+
+    return process(data, *config)
