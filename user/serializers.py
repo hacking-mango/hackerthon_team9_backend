@@ -54,7 +54,7 @@ class UserInfoSerializer(serializers.Serializer):
         fields = ["email", "age", "phone"]
 
 
-class UserUpdateSerializer(serializers.Serializer):
+class UserUpdateSerializer(serializers.ModelSerializer):
     def update(self, validated_data):
 
         user = "user object"  # 토큰 기준으로 확인한 사용자 객체
