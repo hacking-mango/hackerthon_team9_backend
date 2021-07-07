@@ -43,14 +43,15 @@ class FileSerializer(serializers.Serializer):
 
     # return user
 
+
 class UserUpdateSerializer(serializers.Serializer):
     def update(self, validated_data):
 
         user = "user object"  # 토큰 기준으로 확인한 사용자 객체
 
-        user.email = validated_data['email']
-        user.age = validated_data['age']
-        user.phone = validated_data['phone']
+        user.email = validated_data["email"]
+        user.age = validated_data["age"]
+        user.phone = validated_data["phone"]
         password = make_password(validated_data["password"])
         user.password = password
         user.save()

@@ -31,6 +31,7 @@ def user_view(request):
             print(serializer.errors.keys())
             raise exc.ParseError(code="SIGN-UP-ERROR", detail="회원가입 오류 발생")
 
+
 @api_view(["PUT"])
 def user_update_view(request):
 
