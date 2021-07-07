@@ -57,6 +57,8 @@ class PositionUpdateSerializer(serializers.ModelSerializer):
         fields = ["position"]
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField(use_url=True)
+
     def update(self, validated_data):
 
         user = "user object"  # 토큰 기준으로 확인한 사용자 객체
