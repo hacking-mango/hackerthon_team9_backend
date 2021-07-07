@@ -11,11 +11,6 @@ def custom_exception_handler(exc, context):
         if response.status_code in incorrect_status_code_list:
             del response.data["detail"]
             response.data["success"] = 0
-            response.data["data"] = {
-                "code": exc.get_codes(),
-                "message": exc.detail
-            }
-
-
+            response.data["data"] = {"code": exc.get_codes(), "message": exc.detail}
 
     return response
