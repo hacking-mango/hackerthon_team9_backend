@@ -45,6 +45,10 @@ class FileSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    age = serializers.IntegerField()
+    phone = serializers.CharField()
+
     class Meta:
         model = models.User
         fields = ["email", "age", "phone"]
