@@ -44,12 +44,13 @@ class FileSerializer(serializers.Serializer):
     # return user
 
 class PositionUpdateSerializer(serializers.ModelSerializer):
-    def update(self, validated_data):
+    position = serializers.CharField()
 
-        user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+    def update(self, user, validated_data):
 
         user.position = validated_data["position"]
         user.save()
+
         return user
 
     class Meta:
@@ -58,10 +59,10 @@ class PositionUpdateSerializer(serializers.ModelSerializer):
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     profile_image = serializers.ImageField(use_url=True)
+    nickname = serializers.CharField()
+    position = serializers.CharField()
 
-    def update(self, validated_data):
-
-        user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+    def update(self, user, validated_data):
 
         user.nickname = validated_data["nickname"]
         user.position = validated_data["position"]
