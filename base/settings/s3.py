@@ -1,8 +1,10 @@
-AWS_ACCESS_KEY_ID = "Access key ID"
-AWS_SECRET_ACCESS_KEY = "Secret access Key"
-AWS_S3_REGION_NAME = "REGION_NAME"
+import os
 
-AWS_STORAGE_BUCKET_NAME = "BUCKET-NAME"
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_S3_REGION_NAME = "ap-northeast-2"
+
+AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
 
 # 이후에 필요한 경우, 아래 항목에서 파라미터 설정
