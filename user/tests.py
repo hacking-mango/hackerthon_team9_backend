@@ -39,6 +39,7 @@ class SignUpTest(APITestCase):
         res = self.client.post(url, data=params)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
+
 class TestWithUser(APITestCase):
     def setUp(self):
         test_user = models.User.objects.create(
