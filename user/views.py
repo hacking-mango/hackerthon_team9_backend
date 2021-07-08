@@ -78,14 +78,9 @@ def user_info_view(request):
 @api_view(["PUT"])
 @permission_classes((IsAuthenticated,))
 def user_update_view(request):
-    serializer = serializers.UserUpdateSerializer(instance=request.user, data=request.data)
+    config = [serializers.UserUpdateSerializer, "USER-UPDATE-ERROR", "사용자 정보 수정 중 오류 발생"]
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"success": 1}, status=status.HTTP_200_OK)
-    else:
-        print(serializer.errors.keys())
-        raise exc.ParseError(code="USER-UPDATE-ERROR", detail="사용자 정보 수정 중 오류 발생")
+    return process(request, *config)
 
 
 @api_view(["PUT"])
