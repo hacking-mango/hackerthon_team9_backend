@@ -1,25 +1,19 @@
+import os
+from datetime import datetime, timedelta
+
+import jwt
+from django.contrib.auth.hashers import check_password
 from rest_framework import exceptions as exc
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from . import serializers
+from . import models, serializers
 
 
-@api_view(["GET", "POST"])
-def user_view(request):
-    if request.method == "GET":
-        email = request.GET.get("email")
-        password = request.Get.get("password")
-
-        if not email:
-            raise exc.ParseError("이메일 파라미터가 없습니다.")
-
-        if not password:
-            raise exc.ParseError("비밀번호 파라미터가 없습니다.")
-
-        # jwt 인증관련 로그인 구현
-        pass
+@api_view(["POST"])
+def signup_view(request):
     if request.method == "POST":
         serializer = serializers.SignupSerializer(data=request.data)
 
@@ -32,7 +26,48 @@ def user_view(request):
             raise exc.ParseError(code="SIGN-UP-ERROR", detail="회원가입 오류 발생")
 
 
+@api_view(["POST"])
+def login_view(request):
+    if request.method == "POST":
+        email = request.data.get("email", None)
+        password = request.data.get("password", None)
+
+        if any(element is None for element in [email, password]):
+            raise exc.ParseError(code="PARAMETER_ERROR", detail="필수 파라미터값이 없습니다.")
+
+        try:
+            user = models.User.objects.get(email=email)
+        except:  # noqa
+            raise exc.NotAuthenticated(code="NOT_FOUND_USER", detail="존재하지 않는 유저 입니다.")
+
+        if not check_password(password, user.password):
+            raise exc.NotAuthenticated("패스워드가 일치하지 않습니다.")
+
+        payload = {
+            "email": user.email,
+            "exp": datetime.now() + timedelta(seconds=60 * 60 * 24),
+        }
+
+        jwt_encode = jwt.encode(payload=payload, key=os.environ["SECRET_KEY"], algorithm="HS256")
+        token = jwt_encode.decode("utf-8")
+
+        return Response(
+            {
+                "success": 1,
+                "data": {
+                    "token": token,
+                    "expire_time": datetime.now() + timedelta(seconds=60 * 60 * 24),
+                    "email": user.email,
+                    "nickname": user.nickname,
+                    "profile_image": user.profile_image.url,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
 @api_view(["GET"])
+@permission_classes((IsAuthenticated,))
 def user_info_view(request):
     from . import models
 
@@ -45,6 +80,7 @@ def user_info_view(request):
 
 
 @api_view(["PUT"])
+@permission_classes((IsAuthenticated,))
 def user_update_view(request):
     user = "user object"  # 토큰 기준으로 확인한 사용자 객체
 
@@ -62,7 +98,7 @@ def user_update_view(request):
 def profile_update_view(request):
 
     data = request.data
-    position_only = not data.pop('flag')
+    position_only = not data.pop("flag")
     user = "user object"  # 토큰 기준으로 확인한 사용자 객체
 
     def process(user, data, serializer, code, detail):
