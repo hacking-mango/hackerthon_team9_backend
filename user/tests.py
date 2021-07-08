@@ -18,12 +18,12 @@ class SignUpTest(APITestCase):
     def test_signup_success(self):
 
         params = {
-            "email": "tjdntjr123@gmail.com",
-            "nickname": "hello",
-            "password": "qwer1234",
-            "age": 28,
-            "phone": "010-4242-2048",
-            "position": "backend",
+            "email":"email@for.test",
+            "password":"test_password",
+            "nickname":"test_user",
+            "age":20,
+            "phone":"010-0000-0000",
+            "position":"backend",
             "profile_image": SimpleUploadedFile("test.jpg", b"whatevercontentsyouwant"),
         }
 
