@@ -52,3 +52,20 @@ class UserInfoTest(APITestCase):
 
         self.user = test_user
         self.token = token
+
+    def test_user_info_success(self):
+        success_data = {
+            "success": 1,
+            "data": {
+                "email": self.user.email,
+                "age": self.user.age,
+                "phone": self.user.phone,
+            },
+        }
+        url = reverse("info")
+        header = {'HTTP_TOKEN': self.token}
+
+        self.assertEqual(url, "/user/info/")
+        res = self.client.get(url, **header)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, success_data)
