@@ -10,6 +10,11 @@ from rest_framework.views import status
 
 from . import models
 
+small_gif = (
+    b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x00\x00\x00\x21\xf9\x04'
+    b'\x01\x0a\x00\x01\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02'
+    b'\x02\x4c\x01\x00\x3b'
+)
 
 class SignUpTest(APITestCase):
     def tearDown(self):
@@ -24,13 +29,13 @@ class SignUpTest(APITestCase):
             "age":20,
             "phone":"010-0000-0000",
             "position":"backend",
-            "profile_image": SimpleUploadedFile("test.jpg", b"whatevercontentsyouwant"),
+            "profile_image": SimpleUploadedFile('small.gif', small_gif, content_type='image/gif'),
         }
 
         url = reverse("sign-up")
 
         self.assertEqual(url, "/user/signup/")
-        res = self.client.post(url, data=params, format="json")
+        res = self.client.post(url, data=params)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
 
