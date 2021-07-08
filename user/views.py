@@ -80,7 +80,7 @@ def user_info_view(request):
 def user_update_view(request):
     config = [serializers.UserUpdateSerializer, "USER-UPDATE-ERROR", "사용자 정보 수정 중 오류 발생"]
 
-    return process_handler(request, *config)
+    return process_handler(request, config)
 
 
 @api_view(["PUT"])
@@ -93,10 +93,11 @@ def profile_update_view(request):
         else [serializers.ProfileUpdateSerializer, "PROFILE-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
     )
 
-    return process_handler(request, *config)
+    return process_handler(request, config)
 
-def process_handler(request, serializer, code, detail):
+def process_handler(request, config):
     user, data = request.user, request.data
+    serializer, code, detail = config
     serializer = serializer(instance=user, data=data)
 
     if serializer.is_valid():
