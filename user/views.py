@@ -59,6 +59,7 @@ def login_view(request):
                     "expire_time": datetime.now() + timedelta(seconds=60 * 60 * 24),
                     "email": user.email,
                     "nickname": user.nickname,
+                    "position": user.position,
                     "profile_image": user.profile_image.url,
                 },
             },
@@ -69,12 +70,7 @@ def login_view(request):
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
 def user_info_view(request):
-    from . import models
-
-    # user = "user object"  # 토큰 기준으로 확인한 사용자 객체
-    user = models.User.objects.get(pk=1)
-
-    serializer = serializers.UserInfoSerializer(user)
+    serializer = serializers.UserInfoSerializer(request.user)
 
     return Response({"success": 1, "data": serializer.data}, status=status.HTTP_200_OK)
 
@@ -82,36 +78,14 @@ def user_info_view(request):
 @api_view(["PUT"])
 @permission_classes((IsAuthenticated,))
 def user_update_view(request):
-    user = "user object"  # 토큰 기준으로 확인한 사용자 객체
+    config = [serializers.UserUpdateSerializer, "USER-UPDATE-ERROR", "사용자 정보 수정 중 오류 발생"]
 
-    serializer = serializers.UserUpdateSerializer(instance=user, data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"success": 1}, status=status.HTTP_200_OK)
-    else:
-        print(serializer.errors.keys())
-        raise exc.ParseError(code="USER-UPDATE-ERROR", detail="사용자 정보 수정 중 오류 발생")
+    return process_handler(request, config)
 
 
 @api_view(["PUT"])
 def profile_update_view(request):
-
-    data = request.data
-    position_only = not data.pop("flag")
-    user = "user object"  # 토큰 기준으로 확인한 사용자 객체
-
-    def process(user, data, serializer, code, detail):
-
-        serializer = serializer(instance=user, data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response({"success": 1}, status=status.HTTP_200_OK)
-        else:
-            print(serializer.errors.keys())
-            raise exc.ParseError(code=code, detail=detail)
+    position_only = request.data.get("flag") == "0"
 
     config = (
         [serializers.PositionUpdateSerializer, "POSITION-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
@@ -119,4 +93,18 @@ def profile_update_view(request):
         else [serializers.ProfileUpdateSerializer, "PROFILE-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
     )
 
-    return process(user, data, *config)
+    return process_handler(request, config)
+
+
+def process_handler(request, config):
+    user, data = request.user, request.data
+    serializer, code, detail = config
+    serializer = serializer(instance=user, data=data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+        return Response({"success": 1}, status=status.HTTP_200_OK)
+    else:
+        print(serializer.errors.keys())
+        raise exc.ParseError(code=code, detail=detail)

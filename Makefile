@@ -10,9 +10,9 @@ run:
 	python manage.py runserver --settings=base.settings.dev
 
 docker:
-	docker build -t find-city-api:dev .
-	docker tag find-city-api:dev tjdntjr123/find-city-api:dev
-	docker push tjdntjr123/find-city-api:dev
+	docker build -t mingle-api:dev .
+	docker tag mingle-api:dev tjdntjr123/mingle-api:dev
+	docker push tjdntjr123/mingle-api:dev
 
 m1:
 	python manage.py makemigrations
