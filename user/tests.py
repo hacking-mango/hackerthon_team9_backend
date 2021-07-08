@@ -31,7 +31,7 @@ class SignUpTest(APITestCase):
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
 
-class UserInfoTest(APITestCase): # 잘못된 토큰을 전달받은 상황은 나중에
+class UserInfoTest(APITestCase):  # 잘못된 토큰을 전달받은 상황은 나중에
     def setUp(self):
         test_user = models.User.objects.create(
             email="email@for.test",
@@ -54,7 +54,7 @@ class UserInfoTest(APITestCase): # 잘못된 토큰을 전달받은 상황은 �
         self.user = test_user
         self.token = token
 
-    def test_user_info_success(self): # 요청에 성공한 상황
+    def test_user_info_success(self):  # 요청에 성공한 상황
         success_data = {
             "success": 1,
             "data": {
@@ -64,23 +64,20 @@ class UserInfoTest(APITestCase): # 잘못된 토큰을 전달받은 상황은 �
             },
         }
         url = reverse("info")
-        header = {'HTTP_TOKEN': self.token}
+        header = {"HTTP_TOKEN": self.token}
 
         self.assertEqual(url, "/user/info/")
         res = self.client.get(url, **header)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
 
-    def test_user_info_without_token(self): # 토큰이 없는 상황
+    def test_user_info_without_token(self):  # 토큰이 없는 상황
         failure_data = {
             "success": 0,
-            "data": {
-                "code": "not_authenticated",
-                "message": "Authentication credentials were not provided."
-            }
+            "data": {"code": "not_authenticated", "message": "Authentication credentials were not provided."},
         }
         url = reverse("info")
-        header = {'HTTP_TOKEN': None}
+        header = {"HTTP_TOKEN": None}
 
         self.assertEqual(url, "/user/info/")
         res = self.client.get(url, **header)
@@ -111,17 +108,16 @@ class UserUpdateTest(APITestCase):
         self.user = test_user
         self.token = token
 
-    def test_user_update_success(self): # 요청에 성공한 상황
+    def test_user_update_success(self):  # 요청에 성공한 상황
         params = {
-            "email":"changed_email@for.test",
-            "password":"changed_password",
-            "age":30,
-            "phone":"010-1111-1111",
+            "email": "changed_email@for.test",
+            "password": "changed_password",
+            "age": 30,
+            "phone": "010-1111-1111",
         }
-        success_data = { "success": 1 }
+        success_data = {"success": 1}
         url = reverse("user-update")
-        header = {'HTTP_TOKEN': self.token}
-
+        header = {"HTTP_TOKEN": self.token}
 
         self.assertEqual(url, "/user/update/info/")
         res = self.client.put(url, data=params, format="json", **header)
@@ -136,22 +132,19 @@ class UserUpdateTest(APITestCase):
         self.assertEqual(self.user.age, params["age"])
         self.assertEqual(self.user.phone, params["phone"])
 
-    def test_user_update_without_token(self): # 토큰이 없는 상황
+    def test_user_update_without_token(self):  # 토큰이 없는 상황
         params = {
-            "email":"changed_email@for.test",
-            "password":"changed_password",
-            "age":30,
-            "phone":"010-1111-1111",
+            "email": "changed_email@for.test",
+            "password": "changed_password",
+            "age": 30,
+            "phone": "010-1111-1111",
         }
         failure_data = {
             "success": 0,
-            "data": {
-                "code": "not_authenticated",
-                "message": "Authentication credentials were not provided."
-            }
+            "data": {"code": "not_authenticated", "message": "Authentication credentials were not provided."},
         }
         url = reverse("user-update")
-        header = {'HTTP_TOKEN': None}
+        header = {"HTTP_TOKEN": None}
 
         self.assertEqual(url, "/user/update/info/")
         res = self.client.put(url, data=params, format="json", **header)
