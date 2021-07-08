@@ -69,3 +69,19 @@ class UserInfoTest(APITestCase):
         res = self.client.get(url, **header)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
+
+    def test_user_info_failure(self):
+        failure_data = {
+            "success": 0,
+            "data": {
+                "code": "not_authenticated",
+                "message": "Authentication credentials were not provided."
+            }
+        }
+        url = reverse("info")
+        header = {'HTTP_TOKEN': None}
+
+        self.assertEqual(url, "/user/info/")
+        res = self.client.get(url, **header)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.data, failure_data)
