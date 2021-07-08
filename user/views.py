@@ -90,11 +90,10 @@ def user_update_view(request):
 
 @api_view(["PUT"])
 def profile_update_view(request):
-
-    data = request.data
     position_only = request.data.get("flag") == "0"
 
-    def process(user, data, serializer, code, detail):
+    def process(request, serializer, code, detail):
+        user, data = request.user, request.data
 
         serializer = serializer(instance=user, data=data)
 
@@ -112,4 +111,4 @@ def profile_update_view(request):
         else [serializers.ProfileUpdateSerializer, "PROFILE-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
     )
 
-    return process(request.user, data, *config)
+    return process(request, *config)
