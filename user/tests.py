@@ -135,3 +135,33 @@ class UserUpdateTest(APITestCase):
         self.assertTrue(password_match)
         self.assertEqual(self.user.age, params["age"])
         self.assertEqual(self.user.phone, params["phone"])
+
+    def test_user_update_without_token(self): # 토큰이 없는 상황
+        params = {
+            "email":"changed_email@for.test",
+            "password":"changed_password",
+            "age":30,
+            "phone":"010-1111-1111",
+        }
+        failure_data = {
+            "success": 0,
+            "data": {
+                "code": "not_authenticated",
+                "message": "Authentication credentials were not provided."
+            }
+        }
+        url = reverse("user-update")
+        header = {'HTTP_TOKEN': None}
+
+        self.assertEqual(url, "/user/update/info/")
+        res = self.client.put(url, data=params, format="json", **header)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.data, failure_data)
+
+        self.user.refresh_from_db()
+        password_match = check_password(params["password"], self.user.password)
+
+        self.assertNotEqual(self.user.email, params["email"])
+        self.assertFalse(password_match)
+        self.assertNotEqual(self.user.age, params["age"])
+        self.assertNotEqual(self.user.phone, params["phone"])
