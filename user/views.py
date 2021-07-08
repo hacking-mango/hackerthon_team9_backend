@@ -92,7 +92,6 @@ def profile_update_view(request):
 
     data = request.data
     position_only = not data.pop("flag")
-    user = "user object"  # 토큰 기준으로 확인한 사용자 객체
 
     def process(user, data, serializer, code, detail):
 
@@ -112,4 +111,4 @@ def profile_update_view(request):
         else [serializers.ProfileUpdateSerializer, "PROFILE-UPDATE-ERROR", "프로필 정보 수정 중 오류 발생"]
     )
 
-    return process(user, data, *config)
+    return process(request.user, data, *config)
