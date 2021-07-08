@@ -69,12 +69,7 @@ def login_view(request):
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
 def user_info_view(request):
-    from . import models
-
-    # user = "user object"  # 토큰 기준으로 확인한 사용자 객체
-    user = models.User.objects.get(pk=1)
-
-    serializer = serializers.UserInfoSerializer(user)
+    serializer = serializers.UserInfoSerializer(request.user)
 
     return Response({"success": 1, "data": serializer.data}, status=status.HTTP_200_OK)
 
