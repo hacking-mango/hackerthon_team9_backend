@@ -91,9 +91,9 @@ class PositionUpdateSerializer(serializers.ModelSerializer):
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    profile_image = serializers.ImageField(use_url=True)
     nickname = serializers.CharField()
     position = serializers.CharField()
+    profile_image = serializers.ImageField(use_url=True)
 
     def update(self, user, validated_data):
 
