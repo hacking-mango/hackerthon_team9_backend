@@ -59,6 +59,7 @@ def login_view(request):
                     "expire_time": datetime.now() + timedelta(seconds=60 * 60 * 24),
                     "email": user.email,
                     "nickname": user.nickname,
+                    "position": user.position,
                     "profile_image": user.profile_image.url,
                 },
             },
