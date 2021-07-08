@@ -85,3 +85,27 @@ class UserInfoTest(APITestCase): # 잘못된 토큰을 전달받은 상황은 �
         res = self.client.get(url, **header)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(res.data, failure_data)
+
+
+class UserUpdateTest(APITestCase):
+    def setUp(self):
+        test_user = models.User.objects.create(
+            email="email@for.test",
+            password="test_password",
+            nickname="test_user",
+            age=20,
+            phone="010-0000-0000",
+            position="backend",
+            profile_image=SimpleUploadedFile("test.jpg", b"test_content"),
+        )
+
+        payload = {
+            "email": test_user.email,
+            "exp": datetime.now() + timedelta(seconds=60 * 60 * 24),
+        }
+
+        jwt_encode = jwt.encode(payload=payload, key=os.environ["SECRET_KEY"], algorithm="HS256")
+        token = jwt_encode.decode("utf-8")
+
+        self.user = test_user
+        self.token = token
