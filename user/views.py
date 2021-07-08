@@ -55,7 +55,8 @@ def login_view(request):
                     "token": token,
                     "expire_time": datetime.now() + timedelta(seconds=60 * 60 * 24),
                     "email": user.email,
-                    "nickname": user.nickname
+                    "nickname": user.nickname,
+                    "profile_image": user.profile_image.url
                 },
             },
             status=status.HTTP_200_OK
