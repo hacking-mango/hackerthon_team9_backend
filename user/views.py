@@ -95,6 +95,7 @@ def profile_update_view(request):
 
     return process_handler(request, config)
 
+
 def process_handler(request, config):
     user, data = request.user, request.data
     serializer, code, detail = config
