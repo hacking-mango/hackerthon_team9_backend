@@ -91,7 +91,7 @@ def user_update_view(request):
 def profile_update_view(request):
 
     data = request.data
-    position_only = not data.pop("flag")
+    position_only = request.data.get("flag") == '0'
 
     def process(user, data, serializer, code, detail):
 
