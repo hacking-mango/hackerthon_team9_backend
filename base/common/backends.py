@@ -1,14 +1,15 @@
 import os
+
 import jwt
 from django.apps import apps
-from rest_framework.authentication import BaseAuthentication
 from rest_framework import exceptions
+from rest_framework.authentication import BaseAuthentication
 
 
 class Token(BaseAuthentication):
     def authenticate(self, request):
 
-        access_token = request.META.get("HTTP_TOKEN", None) # header: {'TOKEN' or 'token': token}
+        access_token = request.META.get("HTTP_TOKEN", None)  # header: {'TOKEN' or 'token': token}
 
         if not access_token or access_token == "undefined":
             return None

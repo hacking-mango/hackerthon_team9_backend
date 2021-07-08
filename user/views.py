@@ -1,12 +1,15 @@
+import os
+from datetime import datetime, timedelta
+
+import jwt
+from django.contrib.auth.hashers import check_password
 from rest_framework import exceptions as exc
 from rest_framework import status
-from rest_framework.response import Response
-import jwt, os
-from . import serializers, models
-from django.contrib.auth.hashers import check_password
-from datetime import timedelta, datetime
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from . import models, serializers
 
 
 @api_view(["POST"])
@@ -35,7 +38,7 @@ def login_view(request):
         try:
             user = models.User.objects.get(email=email)
         except:  # noqa
-            raise exc.NotAuthenticated(code="NOT_FOUND_USER", detail='존재하지 않는 유저 입니다.')
+            raise exc.NotAuthenticated(code="NOT_FOUND_USER", detail="존재하지 않는 유저 입니다.")
 
         if not check_password(password, user.password):
             raise exc.NotAuthenticated("패스워드가 일치하지 않습니다.")
@@ -45,7 +48,7 @@ def login_view(request):
             "exp": datetime.now() + timedelta(seconds=60 * 60 * 24),
         }
 
-        jwt_encode = jwt.encode(payload=payload, key=os.environ['SECRET_KEY'], algorithm="HS256")
+        jwt_encode = jwt.encode(payload=payload, key=os.environ["SECRET_KEY"], algorithm="HS256")
         token = jwt_encode.decode("utf-8")
 
         return Response(
@@ -56,10 +59,10 @@ def login_view(request):
                     "expire_time": datetime.now() + timedelta(seconds=60 * 60 * 24),
                     "email": user.email,
                     "nickname": user.nickname,
-                    "profile_image": user.profile_image.url
+                    "profile_image": user.profile_image.url,
                 },
             },
-            status=status.HTTP_200_OK
+            status=status.HTTP_200_OK,
         )
 
 
@@ -95,7 +98,7 @@ def user_update_view(request):
 def profile_update_view(request):
 
     data = request.data
-    position_only = not data.pop('flag')
+    position_only = not data.pop("flag")
     user = "user object"  # 토큰 기준으로 확인한 사용자 객체
 
     def process(user, data, serializer, code, detail):

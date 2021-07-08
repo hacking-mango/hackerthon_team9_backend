@@ -82,10 +82,8 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "base.common.backends.Token"
-    ],
-    "EXCEPTION_HANDLER": "base.common.exceptions.custom_exception_handler"
+    "DEFAULT_AUTHENTICATION_CLASSES": ["base.common.backends.Token"],
+    "EXCEPTION_HANDLER": "base.common.exceptions.custom_exception_handler",
 }
 
 # Password validation
@@ -127,7 +125,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 
-#S3 영역
+# S3 영역
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 AWS_S3_REGION_NAME = "ap-northeast-2"

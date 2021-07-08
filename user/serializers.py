@@ -89,6 +89,7 @@ class PositionUpdateSerializer(serializers.ModelSerializer):
         model = models.User
         fields = ["position"]
 
+
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     profile_image = serializers.ImageField(use_url=True)
     nickname = serializers.CharField()
