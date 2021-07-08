@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 import jwt
+from django.contrib.auth.hashers import check_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from rest_framework.test import APITestCase
@@ -109,3 +110,28 @@ class UserUpdateTest(APITestCase):
 
         self.user = test_user
         self.token = token
+
+    def test_user_update_success(self): # 요청에 성공한 상황
+        params = {
+            "email":"changed_email@for.test",
+            "password":"changed_password",
+            "age":30,
+            "phone":"010-1111-1111",
+        }
+        success_data = { "success": 1 }
+        url = reverse("user-update")
+        header = {'HTTP_TOKEN': self.token}
+
+
+        self.assertEqual(url, "/user/update/info/")
+        res = self.client.put(url, data=params, format="json", **header)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, success_data)
+
+        self.user.refresh_from_db()
+        password_match = check_password(params["password"], self.user.password)
+
+        self.assertEqual(self.user.email, params["email"])
+        self.assertTrue(password_match)
+        self.assertEqual(self.user.age, params["age"])
+        self.assertEqual(self.user.phone, params["phone"])
