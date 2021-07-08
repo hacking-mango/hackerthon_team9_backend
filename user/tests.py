@@ -30,7 +30,7 @@ class SignUpTest(APITestCase):
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
 
-class UserInfoTest(APITestCase):
+class UserInfoTest(APITestCase): # 잘못된 토큰을 전달받은 상황은 나중에
     def setUp(self):
         test_user = models.User.objects.create(
             email="email@for.test",
@@ -53,7 +53,7 @@ class UserInfoTest(APITestCase):
         self.user = test_user
         self.token = token
 
-    def test_user_info_success(self):
+    def test_user_info_success(self): # 요청에 성공한 상황
         success_data = {
             "success": 1,
             "data": {
@@ -70,7 +70,7 @@ class UserInfoTest(APITestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
 
-    def test_user_info_failure(self):
+    def test_user_info_failure(self): # 토큰이 없는 상황
         failure_data = {
             "success": 0,
             "data": {
