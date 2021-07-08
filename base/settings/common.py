@@ -78,6 +78,7 @@ DATABASES = {
         "PASSWORD": os.environ["DB_PASSWORD"],  # 계정 비밀번호
         "NAME": os.environ.get("DB_NAME", "postgres"),  # DB명
         "PORT": os.environ.get("DB_PORT"),  # 데이터베이스 포트(보통은 3306)
+        "TEST": {"MIRROR": "default"},
     },
 }
 
