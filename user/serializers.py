@@ -28,22 +28,6 @@ class SignupSerializer(serializers.ModelSerializer):
         fields = ["email", "password", "nickname", "age", "phone", "position", "profile_image"]
 
 
-class FileSerializer(serializers.Serializer):
-    profile_image = serializers.ImageField(use_url=True)
-
-    class Meta:
-        model = models.User
-        fields = ["nickname", "profile_image"]
-
-    # def update(self, validated_data):
-    # extension_name = validated_data["file"].name.split(".").pop()  # 입력받은 파일 이름에서 확장자
-    # user = "user object"  # 토큰 기준으로 확인한 사용자 객체
-
-    # user.profile_image.save(user.nickname + extension_name, validated_data["file"])  # 입력받은 파일 저장
-
-    # return user
-
-
 class UserInfoSerializer(serializers.Serializer):
     email = serializers.EmailField()
     age = serializers.IntegerField()
