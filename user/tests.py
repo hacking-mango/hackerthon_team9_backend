@@ -12,6 +12,9 @@ from . import models
 
 
 class SignUpTest(APITestCase):
+    def tearDown(self):
+        models.User.objects.all().delete()
+
     def test_signup_success(self):
 
         params = {
@@ -53,6 +56,9 @@ class UserInfoTest(APITestCase):  # 잘못된 토큰을 전달받은 상황은 �
 
         self.user = test_user
         self.token = token
+
+    def tearDown(self):
+        models.User.objects.all().delete()
 
     def test_user_info_success(self):  # 요청에 성공한 상황
         success_data = {
@@ -107,6 +113,9 @@ class UserUpdateTest(APITestCase):
 
         self.user = test_user
         self.token = token
+
+    def tearDown(self):
+        models.User.objects.all().delete()
 
     def test_user_update_success(self):  # 요청에 성공한 상황
         params = {
