@@ -39,8 +39,7 @@ class SignUpTest(APITestCase):
         res = self.client.post(url, data=params)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-
-class UserInfoTest(APITestCase):  # 잘못된 토큰을 전달받은 상황은 나중에
+class TestWithUser(APITestCase):
     def setUp(self):
         test_user = models.User.objects.create(
             email="email@for.test",
@@ -65,6 +64,10 @@ class UserInfoTest(APITestCase):  # 잘못된 토큰을 전달받은 상황은 �
 
     def tearDown(self):
         models.User.objects.all().delete()
+
+
+class UserInfoTest(TestWithUser):  # 잘못된 토큰을 전달받은 상황은 나중에
+    URL = reverse("info")
 
     def test_user_info_success(self):  # 요청에 성공한 상황
         success_data = {
@@ -75,11 +78,10 @@ class UserInfoTest(APITestCase):  # 잘못된 토큰을 전달받은 상황은 �
                 "phone": self.user.phone,
             },
         }
-        url = reverse("info")
         header = {"HTTP_TOKEN": self.token}
 
-        self.assertEqual(url, "/user/info/")
-        res = self.client.get(url, **header)
+        self.assertEqual(self.URL, "/user/info/")
+        res = self.client.get(self.URL, **header)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
 
@@ -88,88 +90,56 @@ class UserInfoTest(APITestCase):  # 잘못된 토큰을 전달받은 상황은 �
             "success": 0,
             "data": {"code": "not_authenticated", "message": "Authentication credentials were not provided."},
         }
-        url = reverse("info")
         header = {"HTTP_TOKEN": None}
 
-        self.assertEqual(url, "/user/info/")
-        res = self.client.get(url, **header)
+        self.assertEqual(self.URL, "/user/info/")
+        res = self.client.get(self.URL, **header)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(res.data, failure_data)
 
 
-class UserUpdateTest(APITestCase):
-    def setUp(self):
-        test_user = models.User.objects.create(
-            email="email@for.test",
-            password="test_password",
-            nickname="test_user",
-            age=20,
-            phone="010-0000-0000",
-            position="backend",
-            profile_image=SimpleUploadedFile("test.jpg", b"test_content"),
-        )
-
-        payload = {
-            "email": test_user.email,
-            "exp": datetime.now() + timedelta(seconds=60 * 60 * 24),
-        }
-
-        jwt_encode = jwt.encode(payload=payload, key=os.environ["SECRET_KEY"], algorithm="HS256")
-        token = jwt_encode.decode("utf-8")
-
-        self.user = test_user
-        self.token = token
-
-    def tearDown(self):
-        models.User.objects.all().delete()
+class UserUpdateTest(TestWithUser):
+    URL = reverse("user-update")
+    PARAMS = {
+        "email": "changed_email@for.test",
+        "password": "changed_password",
+        "age": 30,
+        "phone": "010-1111-1111",
+    }
 
     def test_user_update_success(self):  # 요청에 성공한 상황
-        params = {
-            "email": "changed_email@for.test",
-            "password": "changed_password",
-            "age": 30,
-            "phone": "010-1111-1111",
-        }
         success_data = {"success": 1}
-        url = reverse("user-update")
         header = {"HTTP_TOKEN": self.token}
 
-        self.assertEqual(url, "/user/update/info/")
-        res = self.client.put(url, data=params, format="json", **header)
+        self.assertEqual(self.URL, "/user/update/info/")
+        res = self.client.put(self.URL, data=self.PARAMS, format="json", **header)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
 
         self.user.refresh_from_db()
-        password_match = check_password(params["password"], self.user.password)
+        password_match = check_password(self.PARAMS["password"], self.user.password)
 
-        self.assertEqual(self.user.email, params["email"])
+        self.assertEqual(self.user.email, self.PARAMS["email"])
         self.assertTrue(password_match)
-        self.assertEqual(self.user.age, params["age"])
-        self.assertEqual(self.user.phone, params["phone"])
+        self.assertEqual(self.user.age, self.PARAMS["age"])
+        self.assertEqual(self.user.phone, self.PARAMS["phone"])
 
     def test_user_update_without_token(self):  # 토큰이 없는 상황
-        params = {
-            "email": "changed_email@for.test",
-            "password": "changed_password",
-            "age": 30,
-            "phone": "010-1111-1111",
-        }
         failure_data = {
             "success": 0,
             "data": {"code": "not_authenticated", "message": "Authentication credentials were not provided."},
         }
-        url = reverse("user-update")
         header = {"HTTP_TOKEN": None}
 
-        self.assertEqual(url, "/user/update/info/")
-        res = self.client.put(url, data=params, format="json", **header)
+        self.assertEqual(self.URL, "/user/update/info/")
+        res = self.client.put(self.URL, data=self.PARAMS, format="json", **header)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(res.data, failure_data)
 
         self.user.refresh_from_db()
-        password_match = check_password(params["password"], self.user.password)
+        password_match = check_password(self.PARAMS["password"], self.user.password)
 
-        self.assertNotEqual(self.user.email, params["email"])
+        self.assertNotEqual(self.user.email, self.PARAMS["email"])
         self.assertFalse(password_match)
-        self.assertNotEqual(self.user.age, params["age"])
-        self.assertNotEqual(self.user.phone, params["phone"])
+        self.assertNotEqual(self.user.age, self.PARAMS["age"])
+        self.assertNotEqual(self.user.phone, self.PARAMS["phone"])
