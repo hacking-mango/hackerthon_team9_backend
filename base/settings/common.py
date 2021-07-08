@@ -29,7 +29,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = ["rest_framework", "corsheaders", "storages"]
 
-LOCAL_APPS = ["user", 'chat']
+LOCAL_APPS = ["user", "chat"]
 
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
