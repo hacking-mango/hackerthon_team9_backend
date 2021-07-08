@@ -70,7 +70,7 @@ class UserInfoTest(APITestCase): # 잘못된 토큰을 전달받은 상황은 �
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
 
-    def test_user_info_failure(self): # 토큰이 없는 상황
+    def test_user_info_without_token(self): # 토큰이 없는 상황
         failure_data = {
             "success": 0,
             "data": {
