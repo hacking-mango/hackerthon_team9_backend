@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 import jwt
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from rest_framework.test import APITestCase
@@ -49,7 +49,7 @@ class TestWithUser(APITestCase):
     def setUp(self):
         test_user = models.User.objects.create(
             email="email@for.test",
-            password="test_password",
+            password=make_password("test_password"),
             nickname="test_user",
             age=20,
             phone="010-0000-0000",
