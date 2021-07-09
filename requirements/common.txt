@@ -12,3 +12,4 @@ black
 psycopg2-binary==2.9.1
 boto3
 django-storages
+channels
