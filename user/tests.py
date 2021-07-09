@@ -143,3 +143,12 @@ class UserUpdateTest(TestWithUser):
         self.assertFalse(password_match)
         self.assertNotEqual(self.user.age, self.PARAMS["age"])
         self.assertNotEqual(self.user.phone, self.PARAMS["phone"])
+
+
+class ProfileUpdateTest(TestWithUser):
+    URL = reverse("profile-update")
+    END_POINT = "/user/update/profile/"
+    PARAMS = {
+        "nickname": "changed_nickname",
+        "position": "frontend",
+    }
