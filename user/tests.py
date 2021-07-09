@@ -41,6 +41,11 @@ class SignUpTest(APITestCase):
 
 
 class TestWithUser(APITestCase):
+    NO_TOKEN_RESPONSE = {
+        "success": 0,
+        "data": {"code": "not_authenticated", "message": "Authentication credentials were not provided."},
+    }
+
     def setUp(self):
         test_user = models.User.objects.create(
             email="email@for.test",
@@ -88,16 +93,12 @@ class UserInfoTest(TestWithUser):  # 잘못된 토큰을 전달받은 상황은 
         self.assertEqual(res.data, success_data)
 
     def test_user_info_without_token(self):  # 토큰이 없는 상황
-        failure_data = {
-            "success": 0,
-            "data": {"code": "not_authenticated", "message": "Authentication credentials were not provided."},
-        }
         header = {"HTTP_TOKEN": None}
 
         self.assertEqual(self.URL, self.END_POINT)
         res = self.client.get(self.URL, **header)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(res.data, failure_data)
+        self.assertEqual(res.data, self.NO_TOKEN_RESPONSE)
 
 
 class UserUpdateTest(TestWithUser):
@@ -128,16 +129,12 @@ class UserUpdateTest(TestWithUser):
         self.assertEqual(self.user.phone, self.PARAMS["phone"])
 
     def test_user_update_without_token(self):  # 토큰이 없는 상황
-        failure_data = {
-            "success": 0,
-            "data": {"code": "not_authenticated", "message": "Authentication credentials were not provided."},
-        }
         header = {"HTTP_TOKEN": None}
 
         self.assertEqual(self.URL, self.END_POINT)
         res = self.client.put(self.URL, data=self.PARAMS, format="json", **header)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(res.data, failure_data)
+        self.assertEqual(res.data, self.NO_TOKEN_RESPONSE)
 
         self.user.refresh_from_db()
         password_match = check_password(self.PARAMS["password"], self.user.password)
