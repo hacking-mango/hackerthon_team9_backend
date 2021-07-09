@@ -167,3 +167,18 @@ class ProfileUpdateTest(TestWithUser):
 
         self.assertNotEqual(self.user.nickname, self.PARAMS["nickname"])
         self.assertEqual(self.user.position, self.PARAMS["position"])
+
+    def test_profile_update_success(self):  # 요청에 성공한 상황
+        success_data = {"success": 1}
+        header = {"HTTP_TOKEN": self.token}
+        params = {**self.PARAMS, "flag": "1"}
+
+        self.assertEqual(self.URL, self.END_POINT)
+        res = self.client.put(self.URL, data=params, **header)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, success_data)
+
+        self.user.refresh_from_db()
+
+        self.assertEqual(self.user.nickname, self.PARAMS["nickname"])
+        self.assertEqual(self.user.position, self.PARAMS["position"])
