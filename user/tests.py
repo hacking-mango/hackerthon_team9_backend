@@ -69,6 +69,7 @@ class TestWithUser(APITestCase):
 
 class UserInfoTest(TestWithUser):  # 잘못된 토큰을 전달받은 상황은 나중에
     URL = reverse("info")
+    END_POINT = "/user/info/"
 
     def test_user_info_success(self):  # 요청에 성공한 상황
         success_data = {
@@ -81,7 +82,7 @@ class UserInfoTest(TestWithUser):  # 잘못된 토큰을 전달받은 상황은 
         }
         header = {"HTTP_TOKEN": self.token}
 
-        self.assertEqual(self.URL, "/user/info/")
+        self.assertEqual(self.URL, self.END_POINT)
         res = self.client.get(self.URL, **header)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
@@ -93,7 +94,7 @@ class UserInfoTest(TestWithUser):  # 잘못된 토큰을 전달받은 상황은 
         }
         header = {"HTTP_TOKEN": None}
 
-        self.assertEqual(self.URL, "/user/info/")
+        self.assertEqual(self.URL, self.END_POINT)
         res = self.client.get(self.URL, **header)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(res.data, failure_data)
@@ -101,6 +102,7 @@ class UserInfoTest(TestWithUser):  # 잘못된 토큰을 전달받은 상황은 
 
 class UserUpdateTest(TestWithUser):
     URL = reverse("user-update")
+    END_POINT = "/user/update/info/"
     PARAMS = {
         "email": "changed_email@for.test",
         "password": "changed_password",
@@ -112,7 +114,7 @@ class UserUpdateTest(TestWithUser):
         success_data = {"success": 1}
         header = {"HTTP_TOKEN": self.token}
 
-        self.assertEqual(self.URL, "/user/update/info/")
+        self.assertEqual(self.URL, self.END_POINT)
         res = self.client.put(self.URL, data=self.PARAMS, format="json", **header)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res.data, success_data)
@@ -132,7 +134,7 @@ class UserUpdateTest(TestWithUser):
         }
         header = {"HTTP_TOKEN": None}
 
-        self.assertEqual(self.URL, "/user/update/info/")
+        self.assertEqual(self.URL, self.END_POINT)
         res = self.client.put(self.URL, data=self.PARAMS, format="json", **header)
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(res.data, failure_data)
