@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 import jwt
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password, check_password
 from rest_framework import exceptions as exc
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -79,6 +79,10 @@ def user_info_view(request):
 @permission_classes((IsAuthenticated,))
 def user_update_view(request):
     config = [serializers.UserUpdateSerializer, "USER-UPDATE-ERROR", "사용자 정보 수정 중 오류 발생"]
+
+    password = request.data.get("password")
+    if password:
+        request.data["password"] = make_password(password)
 
     return process_handler(request, config)
 
