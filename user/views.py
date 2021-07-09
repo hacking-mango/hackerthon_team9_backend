@@ -88,6 +88,7 @@ def user_update_view(request):
 
 
 @api_view(["PUT"])
+@permission_classes((IsAuthenticated,))
 def profile_update_view(request):
     position_only = request.data.get("flag") == "0"
 
