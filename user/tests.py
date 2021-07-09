@@ -182,3 +182,16 @@ class ProfileUpdateTest(TestWithUser):
 
         self.assertEqual(self.user.nickname, self.PARAMS["nickname"])
         self.assertEqual(self.user.position, self.PARAMS["position"])
+
+    def test_profile_update_without_token(self):  # 토큰이 없는 상황
+        header = {"HTTP_TOKEN": None}
+
+        self.assertEqual(self.URL, self.END_POINT)
+        res = self.client.put(self.URL, data=self.PARAMS, **header)
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.data, self.NO_TOKEN_RESPONSE)
+
+        self.user.refresh_from_db()
+
+        self.assertNotEqual(self.user.nickname, self.PARAMS["nickname"])
+        self.assertNotEqual(self.user.position, self.PARAMS["position"])
