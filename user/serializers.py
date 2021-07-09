@@ -34,7 +34,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
         fields = ["email", "age", "phone"]
 
 
-class UserUpdateSerializer(serializers.Serializer):
+class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ["email", "password", "age", "phone"]
