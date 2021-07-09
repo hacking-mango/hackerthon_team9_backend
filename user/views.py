@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 import jwt
-from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import check_password, make_password
 from rest_framework import exceptions as exc
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
