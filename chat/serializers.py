@@ -35,3 +35,18 @@ class CreateRoomSerializer(serializers.ModelSerializer):
             "max_aosdev",
             "max_iosdev",
         ]
+
+
+class UpdateRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = [
+            "activate",
+            "room_name",
+            "max_planner",
+            "max_designer",
+            "max_frontend",
+            "max_backend",
+            "max_aosdev",
+            "max_iosdev",
+        ]
