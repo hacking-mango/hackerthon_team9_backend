@@ -23,8 +23,8 @@ class Room(BaseModel):
 
 class Match(BaseModel):
     position = models.CharField(blank=True, max_length=10, verbose_name="포지션")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="사용자")
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, verbose_name="채팅방")
 
     class Meta:
         db_table = "match"
