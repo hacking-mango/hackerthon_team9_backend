@@ -27,7 +27,7 @@ class CreateRoomSerializer(serializers.ModelSerializer):
         fields = [
             "room_hash",
             "activate",
-            "nickname",
+            "room_name",
             "max_planner",
             "max_designer",
             "max_frontend",
