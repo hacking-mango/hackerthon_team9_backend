@@ -143,7 +143,7 @@ AWS_S3_SECURE_URLS = False  # https 사용 여부
 AWS_QUERYSTRING_AUTH = False  # 인증 관련 쿼리 파라미터 허용 여부
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # referenced web page1 : https://richone.tistory.com/7
 # referenced web page2 : https://ssungkang.tistory.com/entry/Django-AWS-S3를-이용한-이미지-업로드
 
