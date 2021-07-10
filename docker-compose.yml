@@ -9,7 +9,7 @@ services:
     build: .
     image: "dj-chat:latest"
     container_name: "dj-chat-g-unicorn"
-    command: bash -c "gunicorn -w 1 -k gevent -b 0.0.0.0:8000 dj_chat.wsgi:application"
+    command: bash -c "gunicorn -w 1 -k gevent -b 0.0.0.0:8000 base.wsgi:application"
     ports:
       - "8000:8000"
     depends_on:
@@ -22,7 +22,7 @@ services:
   dj-chat.asgi:
     image: "dj-chat:latest"
     container_name: "dj-chat-daphne"
-    command: bash -c "daphne -b 0.0.0.0 -p 8001 dj_chat.asgi:application"
+    command: bash -c "daphne -b 0.0.0.0 -p 8001 base.asgi:application"
     ports:
       - "8001:8001"
     depends_on:
