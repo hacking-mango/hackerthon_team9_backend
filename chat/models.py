@@ -30,3 +30,14 @@ class Match(BaseModel):
         db_table = "match"
         verbose_name = "매칭풀"
         app_label = "chat"
+
+
+class Message(BaseModel):
+    content = models.TextField(blank=True, verbose_name="채팅 내용")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="사용자")
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True, verbose_name="채팅방")
+
+    class Meta:
+        db_table = "message"
+        verbose_name = "메시지"
+        app_label = "chat"
