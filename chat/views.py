@@ -177,7 +177,7 @@ def get_room_view(request):
     return Response({"success": 1, "data": "해당 사용자가 속한 채팅방이 없음"}, status=status.HTTP_200_OK)
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes((IsAuthenticated,))
 def get_messages_view(request):
     room_hash = request.data.get("room_hash")
