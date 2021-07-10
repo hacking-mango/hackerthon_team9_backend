@@ -1,6 +1,7 @@
 from django.db import models
 
 from base.common.models import BaseModel
+from user.models import User
 
 
 class Room(BaseModel):
@@ -17,4 +18,15 @@ class Room(BaseModel):
     class Meta:
         db_table = "room"
         verbose_name = "채팅방"
+        app_label = "chat"
+
+
+class Match(BaseModel):
+    position = models.CharField(blank=True, max_length=10, verbose_name="포지션")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        db_table = "match"
+        verbose_name = "매칭풀"
         app_label = "chat"
