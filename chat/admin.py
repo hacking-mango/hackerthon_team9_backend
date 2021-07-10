@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import Room, Message, Match
+from .models import Match, Message, Room
 
 
 @admin.register(Room)
 class Room(admin.ModelAdmin):
-    list_display = ('room_hash', 'activate', 'room_name')
+    list_display = ("room_hash", "activate", "room_name")
 
     list_display_links = (
         "room_hash",
