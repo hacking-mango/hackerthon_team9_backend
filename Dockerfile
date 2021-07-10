@@ -5,9 +5,8 @@ RUN apt-get install -y \
 
 ENV PYTHONUNBUFFERED=1
 
-RUN mkdir -p /opt/myproject
-WORKDIR /opt/myproject
-ADD . /opt/myproject
+WORKDIR /code/
+ADD . /code
 
 RUN pip install -r requirements.txt
 
