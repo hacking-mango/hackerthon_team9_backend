@@ -139,7 +139,6 @@ AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazo
 AWS_LOCATION = "static"
 
 STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 AWS_S3_SECURE_URLS = False  # https 사용 여부
@@ -152,13 +151,14 @@ STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # referenced web page2 : https://ssungkang.tistory.com/entry/Django-AWS-S3를-이용한-이미지-업로드
 
 # Channels 영역
-ASGI_APPLICATION = "base.routing.application"
+# ASGI_APPLICATION = "base.routing.application"
 
+ASGI_APPLICATION = "base.routing.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("reids-server.ltehzt.ng.0001.apn2.cache.amazonaws.com", 6379)],
+            "hosts": [("redis", 6379)],
         },
     },
 }
