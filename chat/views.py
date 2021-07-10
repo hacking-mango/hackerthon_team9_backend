@@ -197,3 +197,13 @@ def get_messages_view(request):
     return Response(
         {"success": 1, "data": {"max_loading": max_loading, "messages": messages}}, status=status.HTTP_200_OK
     )
+
+
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def leave_room_view(request):
+    match = Match.objects.get(user=request.user)
+    match.room = None
+    match.save()
+
+    return Response({"success": 1}, status=status.HTTP_200_OK)
