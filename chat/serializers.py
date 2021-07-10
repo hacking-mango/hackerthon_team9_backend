@@ -11,7 +11,7 @@ class CreateRoomSerializer(serializers.ModelSerializer):
     # room = Room.objects.create(
     # room_hash=validated_data["room_hash"],
     # activate=validated_data["activate"],
-    # nickname=validated_data["nickname"],
+    # room_name=validated_data["room_name"],
     # max_planner=validated_data["max_planner"],
     # max_designer=validated_data["max_designer"],
     # max_frontend=validated_data["max_frontend"],
