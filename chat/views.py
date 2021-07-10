@@ -88,7 +88,8 @@ def create_room_view(request):
 
     is_user_matching = Match.objects.filter(user=user)  # 사용자가 매칭풀에 있는 지 여부
 
-    if is_user_matching:  # 사용자가 매칭풀에 있는 경우
+    if is_user_matching:
+        # 사용자가 매칭풀에 있는 경우
         matching_data = is_user_matching[0]
     else:
         matching_data = Match.objects.create(user=user, position=user.position)
