@@ -136,13 +136,11 @@ AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazo
 # 'CacheControl': 'max-age=86400',
 # }
 
-AWS_LOCATION = 'static'
+AWS_LOCATION = "static"
 
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 AWS_S3_SECURE_URLS = False  # https 사용 여부
 AWS_QUERYSTRING_AUTH = False  # 인증 관련 쿼리 파라미터 허용 여부

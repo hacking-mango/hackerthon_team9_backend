@@ -2,15 +2,15 @@ import json
 
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
-
 from rest_framework import exceptions as exc
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import Match
 from user.models import User
+
+from .models import Match
 
 
 def index(request):
@@ -23,21 +23,21 @@ def room(request, room_name):
 
 @api_view(["POST"])
 @permission_classes((IsAuthenticated,))
-def matching(request):
+def matching_view(request):
     user = request.user
     queue_of_user, already_in = Match.objects.get_or_create(user=user, position=user.position)
 
     if already_in:
-        raise exc.ParseError(code='MATCHING_ALREADY_EXISTS', detail='이미 매칭풀에 존재하는 사용자')
+        raise exc.ParseError(code="MATCHING_ALREADY_EXISTS", detail="이미 매칭풀에 존재하는 사용자")
 
     matches = Match.objects.filter(room_id=None).all()
 
-    planner = matches.filter(position='planner').count()
-    designer = matches.filter(position='designer').count()
-    frontend = matches.filter(position='frontend').count()
-    backend = matches.filter(position='backend').count()
-    aosdev = matches.filter(position='aosdev').count()
-    iosdev = matches.filter(position='iosdev').count()
+    planner = matches.filter(position="planner").count()
+    designer = matches.filter(position="designer").count()
+    frontend = matches.filter(position="frontend").count()
+    backend = matches.filter(position="backend").count()
+    aosdev = matches.filter(position="aosdev").count()
+    iosdev = matches.filter(position="iosdev").count()
 
     if not (designer and backend):
         return Response({"success": 1, "data": "필수 조건 불만족"}, status=status.HTTP_200_OK)
