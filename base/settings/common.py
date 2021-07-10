@@ -158,14 +158,14 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.environ.get("REDIS_HOST", "127.0.0.1"), os.environ.get("REDIS_PORT", 6379))],
+            "hosts": [("reids-server.ltehzt.ng.0001.apn2.cache.amazonaws.com", 6379)],
         },
     },
 }
 
 REDIS = {
-    "host": os.environ.get("REDIS_HOST"),
-    "port": os.environ.get("REDIS_PORT"),
+    "host": "reids-server.ltehzt.ng.0001.apn2.cache.amazonaws.com",
+    "port": 6379,
     "password": "",
     "db": 0,
 }

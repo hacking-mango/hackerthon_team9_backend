@@ -13,6 +13,7 @@ class ChatConsumer(WebsocketConsumer):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "chat_%s" % self.room_name
         async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
+        print(1313)
         self.accept()
 
     def disconnect(self, close_code):  # 사용자가 방에서 떠났을 때 동작하는 함수
@@ -23,7 +24,9 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps(message))
 
     def receive(self, text_data):  # 채팅방에 메시지가 전파되었을 때 동작하는 함수
+        print(text_data)
         data = json.loads(text_data)
+        print(data)
 
         author_user = User.objects.filter(email=data["from"])[0]
 
@@ -41,3 +44,4 @@ class ChatConsumer(WebsocketConsumer):
                 },
             },
         )
+
