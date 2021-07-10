@@ -1,7 +1,6 @@
-from django.http import JsonResponse
+from rest_framework import exceptions as exc
 
 from base.common import utill
-from rest_framework import exceptions as exc
 
 
 # 로그인확인 데코레이터
@@ -16,4 +15,3 @@ class LoginCheck:
         if check_token["success"] != 1:
             raise exc.ParseError(code=check_token["errorCode"], detail=check_token["errorMessage"])
         return self.ori_function(self, request, *args, **kwargs)
-

@@ -23,6 +23,9 @@ m2:
 reset_db:
 	./manage.py reset_db
 
+create:
+	python manage.py createsuperuser --settings=base.settings.dev
+
 
 test_user:
 	python manage.py test user
