@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from user.models import User
 
 from .models import Match, Room
-from .serializers import CreateRoomSerializer
+from .serializers import CreateRoomSerializer, UpdateRoomSerializer
 
 POSITIONS = ["planner", "designer", "frontend", "backend", "aosdev", "iosdev"]
 
@@ -121,3 +121,19 @@ def create_room_view(request):
 
     print(serializer.errors.keys())
     raise exc.ParseError(code="CREATE-ROOM-ERROR", detail="채팅방 생성 중 오류 발생")
+
+
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def update_room_view(request):
+    room = Room.objects.prefetch_related("match_set").get(match__user_id=request.user.id)
+
+    serializer = UpdateRoomSerializer(instance=room, data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+        return Response({"success": 1, "data": serializer.data}, status=status.HTTP_200_OK)
+
+    print(serializer.errors.keys())
+    raise exc.ParseError(code="UPDATE-ROOM-ERROR", detail="채팅방 정보 수정 중 오류 발생")
