@@ -26,41 +26,6 @@ def room(request, room_name):
 
 @api_view(["POST"])
 @permission_classes((IsAuthenticated,))
-def create_room_view(request):
-    user = request.user
-
-    is_user_matching = Match.objects.filter(user=user)  # 사용자가 매칭풀에 있는 지 여부
-
-    if is_user_matching:  # 사용자가 매칭풀에 있는 경우
-        matching_data = is_user_matching[0]
-    else:
-        matching_data = Match.objects.create(user=user, position=user.position)
-
-    serializer = CreateRoomSerializer(data=request.data)
-
-    if serializer.is_valid():
-        serializer.save()
-
-        matching_data.room = Room.objects.filter(room_hash=serializer.data.room_hash)[0]
-
-        return Response(
-            {
-                "success": 1,
-                "data": {
-                    "room_hash": serializer.data.room_hash,
-                    "activate": serializer.data.activate,
-                    "room_name": serializer.data.room_name,
-                },
-            },
-            status=status.HTTP_200_OK,
-        )
-
-    print(serializer.errors.keys())
-    raise exc.ParseError(code="SIGN-UP-ERROR", detail="회원가입 오류 발생")
-
-
-@api_view(["POST"])
-@permission_classes((IsAuthenticated,))
 def matching_view(request):
     user = request.user
     valid_data = Match.objects.filter(room__delete_yn=0)  # room delete_yn = 매칭 완료 여부
@@ -121,3 +86,38 @@ def random_matching(user):
         return Response({"success": 1, "data": "최소 구성 인원 불만족"}, status=status.HTTP_200_OK)
 
     return Response({"success": 1, "data": "방 생성해도 됨"}, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def create_room_view(request):
+    user = request.user
+
+    is_user_matching = Match.objects.filter(user=user)  # 사용자가 매칭풀에 있는 지 여부
+
+    if is_user_matching:  # 사용자가 매칭풀에 있는 경우
+        matching_data = is_user_matching[0]
+    else:
+        matching_data = Match.objects.create(user=user, position=user.position)
+
+    serializer = CreateRoomSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+        matching_data.room = Room.objects.filter(room_hash=serializer.data.room_hash)[0]
+
+        return Response(
+            {
+                "success": 1,
+                "data": {
+                    "room_hash": serializer.data.room_hash,
+                    "activate": serializer.data.activate,
+                    "room_name": serializer.data.room_name,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    print(serializer.errors.keys())
+    raise exc.ParseError(code="CREATE-ROOM-ERROR", detail="채팅방 생성 중 오류 발생")
