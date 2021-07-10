@@ -158,3 +158,10 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+REDIS = {
+    "host": os.environ.get("REDIS_HOST"),
+    "port": os.environ.get("REDIS_PORT"),
+    "password": "",
+    "db": 0,
+}
