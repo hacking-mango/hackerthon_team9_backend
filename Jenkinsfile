@@ -6,7 +6,7 @@ node {
     stage('Build image') {
         /* This builds the actual image; synonymous to
         * docker build on the command line */
-        app = docker.build("tjdntjr123/find-city-api")
+        app = docker.build("tjdntjr123/mingle-api")
     }
 
     stage('Test image') {
