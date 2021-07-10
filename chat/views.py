@@ -163,14 +163,26 @@ def update_room_view(request):
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
 def get_room_view(request):
-    user_has_room = Match.objects.values("room_hash").filter(user=request.user)
+    user_has_room = Room.objects.values("room_hash").prefetch_related("match_set").filter(match__user=request.user)
 
     if user_has_room:
         room_hash = user_has_room[0].get("room_hash")
 
         user_match = User.objects.prefetch_related("match_set")
 
-        users = list(user_match.filter(room__room_hash=room_hash).values())
+        users_in_room = user_match.filter(match__room__room_hash=room_hash)
+
+        users = [
+            {
+                "email": user.email,
+                "nickname": user.nickname,
+                "age": user.age,
+                "phone": user.phone,
+                "position": user.position,
+                "profile_image": user.profile_image.url,
+            }
+            for user in users_in_room
+        ]
 
         return Response({"success": 1, "data": {"room_hash": room_hash, "users": users}}, status=status.HTTP_200_OK)
 
