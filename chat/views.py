@@ -137,3 +137,20 @@ def update_room_view(request):
 
     print(serializer.errors.keys())
     raise exc.ParseError(code="UPDATE-ROOM-ERROR", detail="채팅방 정보 수정 중 오류 발생")
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_room_view(request):
+    user_has_room = Match.objects.values("room_hash").filter(user=request.user)
+
+    if user_has_room:
+        room_hash = user_has_room[0].get("room_hash")
+
+        user_match = User.objects.prefetch_related("match_set")
+
+        users = list(user_match.filter(room__room_hash=room_hash).values())
+
+        return Response({"success": 1, "data": {"room_hash": room_hash, "users": users}}, status=status.HTTP_200_OK)
+
+    return Response({"success": 1, "data": "해당 사용자가 속한 채팅방이 없음"}, status=status.HTTP_200_OK)
