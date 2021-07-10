@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from user.models import User
 
 from .models import Match, Room
+from .serializers import CreateRoomSerializer
 
 POSITIONS = ["planner", "designer", "frontend", "backend", "aosdev", "iosdev"]
 
@@ -21,6 +22,41 @@ def index(request):
 
 def room(request, room_name):
     return render(request, "chat/room.html", {"room_name_json": mark_safe(json.dumps(room_name))})
+
+
+@api_view(["POST"])
+@permission_classes((IsAuthenticated,))
+def create_room_view(request):
+    user = request.user
+
+    is_user_matching = Match.objects.filter(user=user)  # 사용자가 매칭풀에 있는 지 여부
+
+    if is_user_matching:  # 사용자가 매칭풀에 있는 경우
+        matching_data = is_user_matching[0]
+    else:
+        matching_data = Match.objects.create(user=user, position=user.position)
+
+    serializer = CreateRoomSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+
+        matching_data.room = Room.objects.filter(room_hash=serializer.data.room_hash)[0]
+
+        return Response(
+            {
+                "success": 1,
+                "data": {
+                    "room_hash": serializer.data.room_hash,
+                    "activate": serializer.data.activate,
+                    "room_name": serializer.data.room_name,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    print(serializer.errors.keys())
+    raise exc.ParseError(code="SIGN-UP-ERROR", detail="회원가입 오류 발생")
 
 
 @api_view(["POST"])
