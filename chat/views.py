@@ -49,7 +49,7 @@ def matching_view(request):
 def room_matching(user, user_match, valid_room):
     position = user.position  # 해당 사용자 포지션
 
-    room_match = valid_room.prefetch_related('match_set')
+    room_match = valid_room.prefetch_related("match_set")
     matching_data = room_match.filter(match__position=position)
 
     for room in valid_room:
@@ -99,7 +99,12 @@ def create_room_view(request):
     if serializer.is_valid():
         serializer.save()
 
-        matching_data.room = Room.objects.filter(room_hash=serializer.data.room_hash)[0]
+        room = Room.objects.filter(room_hash=serializer.data.room_hash)[0]
+
+        matching_data.room = room
+        matching_data.save()
+
+        user_matching(room)
 
         return Response(
             {
@@ -115,6 +120,27 @@ def create_room_view(request):
 
     print(serializer.errors.keys())
     raise exc.ParseError(code="CREATE-ROOM-ERROR", detail="채팅방 생성 중 오류 발생")
+
+
+def user_matching(room):
+    matches = Match.objects.filter(room=None)  # 매칭풀 == 방이 지정되지 않은 사용자들
+
+    matching_table = {f"max_{position}": getattr(room, f"max_{position}") for position in POSITIONS}
+
+    for match in matches:
+        position = match.position
+        max_position = f"max_{position}"
+        valid_room = matching_table[max_position]
+
+        if valid_room:
+            # 매칭 가능 상태
+            match.room = room
+            matching_table[max_position] -= 1
+
+    if not any(matching_table.values()):
+        # 해당 방에 모두 매칭됨
+        room.deleted_yn = 1
+        room.save()
 
 
 @api_view(["POST"])
