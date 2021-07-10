@@ -1,5 +1,6 @@
 import json
 
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from rest_framework import exceptions as exc
@@ -10,7 +11,7 @@ from rest_framework.response import Response
 
 from user.models import User
 
-from .models import Match, Room
+from .models import Match, Message, Room
 from .serializers import CreateRoomSerializer, UpdateRoomSerializer
 
 POSITIONS = ["planner", "designer", "frontend", "backend", "aosdev", "iosdev"]
@@ -174,3 +175,25 @@ def get_room_view(request):
         return Response({"success": 1, "data": {"room_hash": room_hash, "users": users}}, status=status.HTTP_200_OK)
 
     return Response({"success": 1, "data": "해당 사용자가 속한 채팅방이 없음"}, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_messages_view(request):
+    room_hash = request.data.get("room_hash")
+    page_index = request.data.get("page_index")
+
+    message_object = (
+        Message.objects.values("nickname", "content", "created_at", "updated_at")
+        .order_by("-created_at")
+        .filter(user=request.user, room=Room.objects.get(room_hash=room_hash))
+    )
+
+    message_paginator = Paginator(message_object, 30)
+
+    messages = message_paginator.get_page(page_index)
+    max_loading = message_paginator.end_index()
+
+    return Response(
+        {"success": 1, "data": {"max_loading": max_loading, "messages": messages}}, status=status.HTTP_200_OK
+    )
