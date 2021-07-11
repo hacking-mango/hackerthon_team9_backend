@@ -18,6 +18,12 @@ def signup_view(request):
         serializer = serializers.SignupSerializer(data=request.data)
 
         if serializer.is_valid():
+            if request.data.get("position"):
+                serializer.object.position = request.data.get("position")
+
+            if request.data.get("profile_image"):
+                serializer.object.profile_image = request.data.get("profile_image")
+
             serializer.save()
 
             return Response({"success": 1, "data": serializer.data}, status=status.HTTP_201_CREATED)
