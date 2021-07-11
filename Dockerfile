@@ -14,6 +14,6 @@ RUN pip install -r requirements.txt
 # Server
 #RUN python manage.py collectstatic --settings=base.settings.dev
 
-EXPOSE 80 8001 8000
-#STOPSIGNAL SIGINT
-#CMD ["gunicorn", "base.wsgi:application", "--bind", "0.0.0.0:8000"]
+EXPOSE 8000
+STOPSIGNAL SIGINT
+CMD ["gunicorn", "base.wsgi:application", "--bind", "0.0.0.0:8000"]
