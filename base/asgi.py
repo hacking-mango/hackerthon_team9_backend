@@ -1,11 +1,12 @@
 import os
-from django.core.asgi import get_asgi_application # noqa
 
-http_asgi = get_asgi_application() # noqa
-from channels.auth import AuthMiddlewareStack # noqa
-from channels.routing import ProtocolTypeRouter, URLRouter # noqa
+from django.core.asgi import get_asgi_application  # noqa
 
-import chat.routing
+http_asgi = get_asgi_application()  # noqa
+from channels.auth import AuthMiddlewareStack  # noqa
+from channels.routing import ProtocolTypeRouter, URLRouter  # noqa
+
+import chat.routing  # noqa
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "base.settings.dev")
 

@@ -151,14 +151,14 @@ STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # referenced web page2 : https://ssungkang.tistory.com/entry/Django-AWS-S3를-이용한-이미지-업로드
 
 # Channels 영역
-# ASGI_APPLICATION = "base.routing.application"
+ASGI_APPLICATION = "base.asgi.application"
 
-ASGI_APPLICATION = "base.routing.application"
+# ASGI_APPLICATION = "base.routing.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis", 6379)],
+            "hosts": [(os.environ.get("REDIS_HOST"), 6379)],
         },
     },
 }

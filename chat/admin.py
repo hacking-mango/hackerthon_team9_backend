@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Match, Message, Room
+from .models import Room
 
 
 @admin.register(Room)
