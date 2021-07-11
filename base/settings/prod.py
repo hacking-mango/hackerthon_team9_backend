@@ -2,6 +2,9 @@ from .common import *  # noqa
 
 DEBUG = os.environ.get("DEBUG") in ["1", "t", "true", "T", "True"]  # noqa
 
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
+
 # CORS_ORIGIN_WHITELIST = os.environ.get("CORS_ORIGIN_WHITELIST", "").split(",")  # noqa
 CORS_ORIGIN_WHITELIST = ["*"]
 
