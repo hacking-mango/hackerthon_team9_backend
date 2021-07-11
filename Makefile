@@ -14,6 +14,11 @@ docker:
 	docker tag mingle-api:dev tjdntjr123/mingle-api:dev
 	docker push tjdntjr123/mingle-api:dev
 
+docker-asgi:
+	docker build -t mingle-api-asgi:dev .
+	docker tag mingle-api-asgi:dev tjdntjr123/mingle-api-asgi:dev
+	docker push tjdntjr123/mingle-api-asgi:dev
+
 m1:
 	python manage.py makemigrations
 
